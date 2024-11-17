@@ -9,9 +9,25 @@
 
 ## Rules
 
-- [ ] Cat has 9 lives
+### Start with
+
+- [x] Cat has 9 lives
+- [x] Cat can accomplish a goal (maybe eat its food)
 - [ ] Cat can move
-- [ ] Cat can accomplish a goal (maybe eat its food)
+
+- [ ] An Owner has its own goals
+- [ ] Arthur (first type of owner) wants to cuddle the cat
+  - [ ] For that he has a goal to search for the cat
+    - [ ] To do that he searches in random places (walks to one place, looks, walks to another etc)
+- [ ] When Arthur sees the cat, he starts following it
+- [ ] When Arthur in close proximity to the cat, he starts cuddling it
+- [ ] When the cat is cuddles, the cat loses a life
+
+- [ ] Game restarts the level when cat loses one life
+- [ ] Game ends when all lives are exhausted
+- [ ] Game level finishes when all goals are accomplished
+
+### Implement
 
 - [ ] Cat can jump
 - [ ] Cat can hide in hiding spots
@@ -20,16 +36,11 @@
 - [ ] Cat can scratch to avoid being cuddled by the owner (maybe limited times)
 - [ ] Cat can move objects, e.g. to throw something off an edge, so that an object makes a souns and lures owner.
 
-- [ ] Owner has its own goals
 - [ ] Owner can see the cat at a certain distance and then his goal is to catch it
 - [ ] Owner hears sounds and goes to the source
 - [ ] Owner can catch the cat
 - [ ] Owner can try to reach the cat in its hiding spot (if seen)
 - [ ] Owner can lose track of the cat
-
-- [ ] Game restarts the level when cat loses one life
-- [ ] Game ends when all lives are exhausted
-- [ ] Game level finishes when all goals are accomplished
 
 ## Ideas
 
@@ -45,6 +56,8 @@ Cat owners are enemies who wants to cuddle the cat.
 - [ ] Disensection: danger zones?
 - [ ] Guests: children!
 - [ ] If you do enough damage (storywise or somehow else?) to one owner, he gives you to other owner with different set of rules
+- [ ] Owner want to give the pill to the cat
+- [ ] Owner wants to heal cat's leg
 
 ### Characters
 
@@ -55,3 +68,7 @@ Cat owners are enemies who wants to cuddle the cat.
 
 - [ ] Mouse shop for the cat?
 - [ ] Cat tray (a goal connected to it?)
+
+### Items
+
+- [ ] Cucumber which scares the cat
