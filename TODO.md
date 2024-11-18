@@ -7,6 +7,14 @@
 - [ ] Media to play: terminal
 - [ ] Media to play: 2d
 
+## 2D
+
+- [ ] Move in 2d space (left -1px, right +1px)
+- [ ] Cat to be a small square
+- [ ] Owner to be a big square
+- [ ] Owner walks to cat's position
+- [ ] When owner intersects with cat - stop
+
 ## Rules
 
 ### Start with
@@ -41,6 +49,8 @@
 - [ ] Owner can catch the cat
 - [ ] Owner can try to reach the cat in its hiding spot (if seen)
 - [ ] Owner can lose track of the cat
+
+- [ ] Game commands (mapped to vendor lib enums)
 
 ## Ideas
 

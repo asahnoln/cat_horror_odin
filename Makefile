@@ -2,7 +2,11 @@
 
 .PHONY: build
 build:
-	odin build cmd -collection:src=src
+	odin build src/cmd -collection:src=src
+
+.PHONY: run
+run:
+	odin run src/cmd -collection:src=src
 
 .PHONY: test
 test:
