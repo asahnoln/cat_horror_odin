@@ -2,12 +2,16 @@ package game
 
 DEFAULT_SPEED :: 1
 
+Entity :: struct {
+	pos: Pos,
+}
+
 Game :: struct {
 	player: struct {
-		pos: Pos,
+		using _: Entity,
 	},
 	enemy:  struct {
-		pos: Pos,
+		using _: Entity,
 	},
 }
 
@@ -24,10 +28,14 @@ dirs := [Command]int {
 }
 
 cmd :: proc(g: ^Game, c: Command) {
-	g.player.pos.x = g.player.pos.x + dirs[c] * DEFAULT_SPEED
+	g.player.pos.x += dirs[c] * DEFAULT_SPEED
 }
 
 play :: proc(g: ^Game) {
-	dir := g.player.pos.x < g.enemy.pos.x ? -1 : 1
-	g.enemy.pos.x = g.enemy.pos.x + dir
+	follow(&g.enemy, &g.player)
+}
+
+follow :: proc(who, whom: ^Entity) {
+	dir := whom.pos.x < who.pos.x ? -1 : 1
+	who.pos.x += dir
 }

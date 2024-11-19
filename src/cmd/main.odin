@@ -16,8 +16,8 @@ main :: proc() {
 		defer rl.EndDrawing()
 
 		rl.ClearBackground(rl.WHITE)
-		rl.DrawRectangle(cast(i32)g.player.pos.x, cast(i32)g.player.pos.y, 25, 25, rl.GREEN)
 		rl.DrawRectangle(cast(i32)g.enemy.pos.x, cast(i32)g.enemy.pos.y, 50, 50, rl.RED)
+		rl.DrawRectangle(cast(i32)g.player.pos.x, cast(i32)g.player.pos.y, 25, 25, rl.GREEN)
 
 		switch {
 		case rl.IsKeyDown(rl.KeyboardKey.LEFT):

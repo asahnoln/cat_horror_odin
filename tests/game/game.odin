@@ -35,3 +35,7 @@ enemy_follows_player :: proc(t: ^testing.T) {
 		testing.expect_value(t, g.enemy.pos.x, test.enemy_final_pos.x)
 	}
 }
+
+@(test)
+game_ends_when_enemy_catches_the_player :: proc(t: ^testing.T) {
+}
