@@ -46,3 +46,12 @@ game_ends_when_enemy_catches_the_player :: proc(t: ^testing.T) {
 
 	// TODO: Does the Game fully stops? Does it register some commands or not?
 }
+
+@(test)
+enemy_starts_following_when_notices_the_player :: proc(t: ^testing.T) {
+	g := &game.Game{}
+	g.enemy.pos.x = 50
+
+	game.play(g)
+	testing.expect_value(t, g.enemy.pos.x, 50)
+}
