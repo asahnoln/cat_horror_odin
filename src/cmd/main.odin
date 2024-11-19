@@ -1,5 +1,6 @@
 package main
 
+import "core:fmt"
 import "src:game"
 import rl "vendor:raylib"
 
@@ -11,7 +12,7 @@ main :: proc() {
 
 	rl.SetTargetFPS(60)
 
-	for !rl.WindowShouldClose() {
+	for !rl.WindowShouldClose() && !g.lost {
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
 

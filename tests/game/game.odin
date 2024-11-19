@@ -38,4 +38,11 @@ enemy_follows_player :: proc(t: ^testing.T) {
 
 @(test)
 game_ends_when_enemy_catches_the_player :: proc(t: ^testing.T) {
+	g := &game.Game{player = {pos = game.Pos{0, 0}}, enemy = {pos = game.Pos{1, 0}}}
+	testing.expect(t, !g.lost)
+
+	game.play(g)
+	testing.expect(t, g.lost)
+
+	// TODO: Does the Game fully stops? Does it register some commands or not?
 }
