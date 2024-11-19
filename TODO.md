@@ -19,8 +19,8 @@
 
 ### Start with
 
-- [x] Cat has 9 lives
-- [x] Cat can accomplish a goal (maybe eat its food)
+- [ ] Cat has 9 lives
+- [ ] Cat can accomplish a goal (maybe eat its food)
 - [ ] Cat can move
 
 - [ ] An Owner has its own goals

@@ -1,27 +1,25 @@
 package game
 
-import "g2d"
-import "rules/cat"
-import "vendor:raylib"
+DEFAULT_SPEED :: 1
 
 Game :: struct {
-	player:       ^cat.Cat,
-	goals_to_win: [dynamic]cat.Goal,
+	player: struct {
+		pos: Pos,
+	},
 }
 
-is_won :: proc(g: Game) -> bool {
-	return false
+Pos :: distinct [2]i32
+
+Command :: enum {
+	MoveLeft,
+	MoveRight,
 }
 
-press :: proc(g: Game, k: raylib.KeyboardKey) {
-	x: i32
+dirs := [Command]i32 {
+	.MoveLeft  = -1,
+	.MoveRight = 1,
+}
 
-	#partial switch k {
-	case raylib.KeyboardKey.RIGHT:
-		x = 1
-	case raylib.KeyboardKey.LEFT:
-		x = -1
-	}
-
-	g2d.move(g.player, x)
+cmd :: proc(g: ^Game, c: Command) {
+	g.player.pos.x = g.player.pos.x + dirs[c] * DEFAULT_SPEED
 }
