@@ -21,3 +21,17 @@ player_moves_on_commands :: proc(t: ^testing.T) {
 		testing.expect_value(t, g.player.pos, test.final_pos)
 	}
 }
+
+@(test)
+enemy_follows_player :: proc(t: ^testing.T) {
+	tt := [?]struct {
+		player_pos:      game.Pos,
+		enemy_final_pos: game.Pos,
+	}{{game.Pos{0, 0}, game.Pos{49, 0}}, {game.Pos{100, 0}, game.Pos{51, 0}}}
+
+	for test in tt {
+		g := &game.Game{player = {pos = test.player_pos}, enemy = {pos = game.Pos{50, 0}}}
+		game.play(g)
+		testing.expect_value(t, g.enemy.pos.x, test.enemy_final_pos.x)
+	}
+}

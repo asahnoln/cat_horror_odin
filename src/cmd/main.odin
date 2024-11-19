@@ -7,14 +7,17 @@ main :: proc() {
 	rl.InitWindow(800, 450, "CAT!")
 	defer rl.CloseWindow()
 
-	g := &game.Game{player = {pos = game.Pos{200, 250}}}
+	g := &game.Game{player = {pos = game.Pos{200, 250}}, enemy = {pos = game.Pos{700, 250}}}
+
+	rl.SetTargetFPS(60)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
 
 		rl.ClearBackground(rl.WHITE)
-		rl.DrawRectangle(g.player.pos.x, g.player.pos.y, 50, 50, rl.RED)
+		rl.DrawRectangle(cast(i32)g.player.pos.x, cast(i32)g.player.pos.y, 25, 25, rl.GREEN)
+		rl.DrawRectangle(cast(i32)g.enemy.pos.x, cast(i32)g.enemy.pos.y, 50, 50, rl.RED)
 
 		switch {
 		case rl.IsKeyDown(rl.KeyboardKey.LEFT):
@@ -22,5 +25,7 @@ main :: proc() {
 		case rl.IsKeyDown(rl.KeyboardKey.RIGHT):
 			game.cmd(g, game.Command.MoveRight)
 		}
+
+		game.play(g)
 	}
 }
