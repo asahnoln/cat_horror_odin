@@ -1,7 +1,9 @@
 package main
 
 import "core:fmt"
+import "core:time"
 import "src:game"
+import "src:utils"
 import rl "vendor:raylib"
 
 main :: proc() {
@@ -9,7 +11,7 @@ main :: proc() {
 	defer rl.CloseWindow()
 
 	g := &game.Game {
-		player = {pos = game.Pos{200, 250}},
+		player = {pos = game.Pos{200, 250}, jump_height = 60, jump_time = 2 * time.Second},
 		enemy = {pos = game.Pos{700, 250}, min_notice_distance = 100},
 	}
 
@@ -30,6 +32,10 @@ main :: proc() {
 			game.cmd(g, game.Command.MoveRight)
 		}
 
-		game.play(g)
+		if rl.IsKeyPressed(rl.KeyboardKey.SPACE) {
+			game.cmd(g, game.Command.Jump)
+		}
+
+		game.play(g, utils.f2s(cast(f64)rl.GetFrameTime()))
 	}
 }

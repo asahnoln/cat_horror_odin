@@ -1,6 +1,7 @@
 package test_game
 
 import "core:testing"
+import "core:time"
 import "src:game"
 import rl "vendor:raylib"
 
@@ -20,4 +21,22 @@ player_moves_on_commands :: proc(t: ^testing.T) {
 		game.cmd(g, test.c)
 		testing.expect_value(t, g.player.pos, test.final_pos)
 	}
+}
+
+@(test)
+player_can_jump :: proc(t: ^testing.T) {
+	g := &game.Game{player = {jump_height = 10, jump_time = 2 * time.Second}}
+	g.player.pos.y = 100
+
+	game.play(g, 1 * time.Second)
+	game.cmd(g, game.Command.Jump)
+	game.play(g, 0)
+	testing.expect_value(t, g.player.pos.y, 90)
+
+	game.play(g, 1 * time.Second)
+	game.play(g, 2 * time.Second)
+	testing.expect_value(t, g.player.pos.y, 100)
+
+	game.play(g, 2 * time.Second)
+	testing.expect_value(t, g.player.pos.y, 100)
 }
