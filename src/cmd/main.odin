@@ -8,7 +8,10 @@ main :: proc() {
 	rl.InitWindow(800, 450, "CAT!")
 	defer rl.CloseWindow()
 
-	g := &game.Game{player = {pos = game.Pos{200, 250}}, enemy = {pos = game.Pos{700, 250}}}
+	g := &game.Game {
+		player = {pos = game.Pos{200, 250}},
+		enemy = {pos = game.Pos{700, 250}, min_notice_distance = 100},
+	}
 
 	rl.SetTargetFPS(60)
 

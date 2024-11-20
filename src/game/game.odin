@@ -13,7 +13,8 @@ Game :: struct {
 		using _: Entity,
 	},
 	enemy:  struct {
-		using _: Entity,
+		using _:             Entity,
+		min_notice_distance: int,
 	},
 	lost:   bool,
 }
@@ -40,15 +41,25 @@ cmd :: proc(g: ^Game, c: Command) {
 
 // Play one cycle of the Game
 play :: proc(g: ^Game) {
-	follow(&g.enemy, &g.player)
+	if should_follow(&g.enemy, &g.player, g.enemy.min_notice_distance) {
+		follow(&g.enemy, &g.player)
+	}
 
 	g.lost = check_if_lost(g)
 }
 
+// If who should follow whom based on minimum notice distance
+should_follow :: proc(who, whom: ^Entity, min_notice_distance: int) -> bool {
+	return who.pos.x - whom.pos.x <= min_notice_distance
+}
+
 // Who follows Whom
 follow :: proc(who, whom: ^Entity) {
-	dir := whom.pos.x < who.pos.x ? -1 : 1
-	who.pos.x += dir
+	if who.pos.x == whom.pos.x {
+		return
+	}
+
+	who.pos.x += whom.pos.x < who.pos.x ? -1 : 1
 }
 
 // Check lose conditions
