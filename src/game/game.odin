@@ -45,9 +45,7 @@ dirs := #partial [Command]int {
 // Send command to the Game
 cmd :: proc(g: ^Game, c: Command) {
 	if c == .Jump {
-		g.player.pos.y -= g.player.jump_height
-		g.player.jump_start_time = g.time_elapsed
-		g.player.jumping = true
+		player_jump(g)
 	}
 
 	g.player.pos.x += dirs[c] * DEFAULT_SPEED
@@ -57,16 +55,26 @@ cmd :: proc(g: ^Game, c: Command) {
 play :: proc(g: ^Game, delta: time.Duration = 0) {
 	g.time_elapsed += delta
 
-	if g.player.jumping && g.time_elapsed >= g.player.jump_start_time + g.player.jump_time {
-		g.player.pos.y += g.player.jump_height
-		g.player.jumping = false
-	}
+	player_jump_reset(g)
 
 	if should_follow(&g.enemy, &g.player, g.enemy.min_notice_distance) {
 		follow(&g.enemy, &g.player)
 	}
 
 	g.lost = check_if_lost(g)
+}
+
+player_jump :: proc(g: ^Game) {
+	g.player.pos.y -= g.player.jump_height
+	g.player.jump_start_time = g.time_elapsed
+	g.player.jumping = true
+}
+
+player_jump_reset :: proc(g: ^Game) {
+	if g.player.jumping && g.time_elapsed >= g.player.jump_start_time + g.player.jump_time {
+		g.player.pos.y += g.player.jump_height
+		g.player.jumping = false
+	}
 }
 
 // If who should follow whom based on minimum notice distance
@@ -85,5 +93,5 @@ follow :: proc(who, whom: ^Entity) {
 
 // Check lose conditions
 check_if_lost :: proc(g: ^Game) -> bool {
-	return g.enemy.pos.x == g.player.pos.x
+	return g.enemy.pos == g.player.pos
 }
