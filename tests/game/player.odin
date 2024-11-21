@@ -13,15 +13,28 @@ player_moves_on_commands :: proc(t: ^testing.T) {
 		final_pos: game.Pos,
 		speed:     int,
 	} {
-		{game.Pos{0, 0}, game.Command.MoveLeft, game.Pos{-2, 0}, 2},
-		{game.Pos{100, 200}, game.Command.MoveRight, game.Pos{103, 200}, 3},
+		{game.Pos{0, 0}, game.Command.MoveLeft, game.Pos{-1, 0}, 2},
+		{game.Pos{100, 200}, game.Command.MoveRight, game.Pos{102, 200}, 4},
+		{game.Pos{50, 10}, game.Command.MoveLeft, game.Pos{49, 10}, 1},
 	}
 
 	for test in tt {
 		g := &game.Game{player = {pos = test.start_pos, speed = test.speed}}
 		game.cmd(g, test.c)
+		game.play(g, 500 * time.Millisecond)
 		testing.expect_value(t, g.player.pos, test.final_pos)
 	}
+}
+
+@(test)
+player_stands_when_no_command_passed :: proc(t: ^testing.T) {
+	g := &game.Game{player = {speed = 1}}
+	game.cmd(g, game.Command.MoveLeft)
+	game.play(g, 1 * time.Second)
+	testing.expect_value(t, g.player.pos, game.Pos{-1, 0})
+
+	game.play(g, 1 * time.Second)
+	testing.expect_value(t, g.player.pos, game.Pos{-1, 0})
 }
 
 @(test)

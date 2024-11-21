@@ -1,12 +1,12 @@
 package game
 
+import "core:math"
 import "core:time"
-
-DEFAULT_SPEED :: 1
 
 // Any entity having coordinates
 Entity :: struct {
-	pos: Pos,
+	pos:   Pos,
+	speed: int,
 }
 
 // Main state object for the game holding all info on current game
@@ -17,6 +17,7 @@ Game :: struct {
 		jump_time:       time.Duration,
 		jump_start_time: time.Duration,
 		jumping:         bool,
+		current_command: Command,
 	},
 	enemy:        struct {
 		using _:             Entity,
@@ -31,6 +32,7 @@ Pos :: distinct [2]int
 
 // Game commands
 Command :: enum {
+	None,
 	MoveLeft,
 	MoveRight,
 	Jump,
@@ -44,16 +46,19 @@ dirs := #partial [Command]int {
 
 // Send command to the Game
 cmd :: proc(g: ^Game, c: Command) {
+	// FIX: Move jump to play proc
 	if c == .Jump {
 		player_jump(g)
 	}
 
-	g.player.pos.x += dirs[c] * DEFAULT_SPEED
+	g.player.current_command = c
 }
 
 // Play one cycle of the Game
 play :: proc(g: ^Game, delta: time.Duration = 0) {
 	g.time_elapsed += delta
+
+	player_move(g, delta)
 
 	player_jump_reset(g)
 
@@ -62,6 +67,14 @@ play :: proc(g: ^Game, delta: time.Duration = 0) {
 	}
 
 	g.lost = check_if_lost(g)
+}
+
+player_move :: proc(g: ^Game, delta: time.Duration) {
+	// FIX: Make general move proc for enemy to use as well
+	g.player.pos.x +=
+		dirs[g.player.current_command] *
+		int(math.ceil(cast(f64)g.player.speed * time.duration_seconds(delta)))
+	g.player.current_command = .None
 }
 
 player_jump :: proc(g: ^Game) {
