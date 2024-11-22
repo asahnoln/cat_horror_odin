@@ -11,19 +11,9 @@ Entity :: struct {
 
 // Main state object for the game holding all info on current game
 Game :: struct {
-	player:       struct {
-		using _:         Entity,
-		jump_height:     int,
-		jump_time:       time.Duration,
-		jump_time_left:  time.Duration,
-		current_command: Command,
-	},
-	enemy:        struct {
-		using _:             Entity,
-		min_notice_distance: int,
-	},
-	time_elapsed: time.Duration,
-	lost:         bool,
+	player: Player,
+	enemy:  Enemy,
+	lost:   bool,
 }
 
 // 2d coordinates
@@ -49,55 +39,11 @@ cmd :: proc(g: ^Game, c: Command) {
 }
 
 // Play one cycle of the Game
-play :: proc(g: ^Game, delta: time.Duration = 0) {
-	g.time_elapsed += delta
+update :: proc(using g: ^Game, delta: time.Duration = 0) {
+	update_player(&player, delta)
+	update_enemy(&enemy, player, delta)
 
-	player_move(g, delta)
-	player_jump(g)
-	player_jump_reset(g, delta)
-	g.player.current_command = .None
-
-	if should_follow(&g.enemy, &g.player, g.enemy.min_notice_distance) {
-		follow(&g.enemy, &g.player, delta)
-	}
-
-	g.lost = check_if_lost(g)
-}
-
-player_move :: proc(g: ^Game, delta: time.Duration) {
-	move(&g.player, dirs[g.player.current_command], delta)
-}
-
-player_jump :: proc(g: ^Game) {
-	if g.player.current_command == .Jump {
-		g.player.pos.y -= g.player.jump_height
-		g.player.jump_time_left = g.player.jump_time
-	}
-}
-
-player_jump_reset :: proc(g: ^Game, delta: time.Duration) {
-	if g.player.jump_time_left > 0 {
-		g.player.jump_time_left -= delta
-
-		if g.player.jump_time_left <= 0 {
-			g.player.pos.y += g.player.jump_height
-		}
-	}
-}
-
-// If who should follow whom based on minimum notice distance
-should_follow :: proc(who, whom: ^Entity, min_notice_distance: int) -> bool {
-	return who.pos.x - whom.pos.x <= min_notice_distance
-}
-
-// Who follows Whom
-follow :: proc(who, whom: ^Entity, delta: time.Duration) {
-	if who.pos.x == whom.pos.x {
-		return
-	}
-
-	dir := whom.pos.x < who.pos.x ? -1 : 1
-	move(who, dir, delta)
+	g.lost = check_if_lost(g^)
 }
 
 move :: proc(e: ^Entity, dir: int, delta: time.Duration) {
@@ -109,6 +55,6 @@ next_frame_pos_x :: proc(dir: int, speed: int, delta: time.Duration) -> int {
 }
 
 // Check lose conditions
-check_if_lost :: proc(g: ^Game) -> bool {
+check_if_lost :: proc(g: Game) -> bool {
 	return g.enemy.pos == g.player.pos
 }

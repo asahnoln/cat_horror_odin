@@ -41,6 +41,6 @@ main :: proc() {
 			game.cmd(g, game.Command.Jump)
 		}
 
-		game.play(g, utils.f2s(cast(f64)rl.GetFrameTime()))
+		game.update(g, utils.f2s(cast(f64)rl.GetFrameTime()))
 	}
 }

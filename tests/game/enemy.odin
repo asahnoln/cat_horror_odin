@@ -26,7 +26,7 @@ enemy_follows_player_only_when_notices :: proc(t: ^testing.T) {
 			player = {pos = test.player_pos},
 			enemy = {pos = enemy_start_position, min_notice_distance = 25, speed = 4},
 		}
-		game.play(g, 500 * time.Millisecond)
+		game.update(g, 500 * time.Millisecond)
 		testing.expect_value(t, g.enemy.pos.x, test.enemy_final_pos.x)
 	}
 }
