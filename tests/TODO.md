@@ -19,3 +19,4 @@
 - [ ] Enemy jump as well?
 - [ ] somehow force stating speed to entity?
 - [ ] Hide in special locations (entities)
+- [ ] After basic mechanices (go to locations to win) try sprites, animation, etc
