@@ -7,11 +7,13 @@
 - [x] Enemy should catch the player when exactly at his spot
 - [x] Entities move with speed
 - [x] Use frame delta time with the speed
+- [x] Player refactor jump?
+- [x] Player reach a location and then win?
+- [ ] Player reaches several locations in order to win
 - [ ] Stop jumping if already jumped
+- [ ] Enemy catch player using their sizes (entities should have sizes)
 - [ ] Fully animate jump
-- [ ] Player refactor jump?
 - [ ] Level has objects to jump on and off
 - [ ] Enemy jump as well?
-- [ ] Player reach a location and then win?
-- [ ] Assign speed instead of using default one
+- [x] Assign speed instead of using default one
 - [ ] somehow force stating speed to entity?

@@ -11,9 +11,16 @@ Entity :: struct {
 
 // Main state object for the game holding all info on current game
 Game :: struct {
-	player: Player,
-	enemy:  Enemy,
-	lost:   bool,
+	player:   Player,
+	enemy:    Enemy,
+	win_zone: Entity,
+	state:    State,
+}
+
+State :: enum {
+	InProgress,
+	Lost,
+	Won,
 }
 
 // 2d coordinates
@@ -42,19 +49,25 @@ cmd :: proc(g: ^Game, c: Command) {
 update :: proc(using g: ^Game, delta: time.Duration = 0) {
 	update_player(&player, delta)
 	update_enemy(&enemy, player, delta)
-
-	g.lost = check_if_lost(g^)
+	update_state(g)
 }
 
+// Moves entity in direction with its speed
 move :: proc(e: ^Entity, dir: int, delta: time.Duration) {
 	e.pos.x += next_frame_pos_x(dir, e.speed, delta)
 }
 
+// Calculate next x coordinate in delta time
 next_frame_pos_x :: proc(dir: int, speed: int, delta: time.Duration) -> int {
 	return dir * int(math.ceil(cast(f64)speed * time.duration_seconds(delta)))
 }
 
-// Check lose conditions
-check_if_lost :: proc(g: Game) -> bool {
-	return g.enemy.pos == g.player.pos
+// Check win/lose conditions
+update_state :: proc(using g: ^Game) {
+	switch {
+	case g.enemy.pos == g.player.pos:
+		state = .Lost
+	case player.pos == win_zone.pos:
+		state = .Won
+	}
 }

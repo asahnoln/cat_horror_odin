@@ -11,22 +11,19 @@ main :: proc() {
 	defer rl.CloseWindow()
 
 	g := &game.Game {
-		player = {
-			pos = game.Pos{200, 250},
-			speed = 100,
-			jump_height = 60,
-			jump_time = 1 * time.Second,
-		},
-		enemy = {pos = game.Pos{700, 250}, min_notice_distance = 100, speed = 50},
+		player = {pos = {200, 250}, speed = 100, jump_height = 60, jump_time = 1 * time.Second},
+		enemy = {pos = {500, 250}, min_notice_distance = 100, speed = 50},
+		win_zone = {pos = {700, 250}},
 	}
 
 	rl.SetTargetFPS(60)
 
-	for !rl.WindowShouldClose() && !g.lost {
+	for !rl.WindowShouldClose() && g.state == game.State.InProgress {
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
 
 		rl.ClearBackground(rl.WHITE)
+		rl.DrawRectangle(cast(i32)g.win_zone.pos.x, cast(i32)g.win_zone.pos.y, 100, 100, rl.YELLOW)
 		rl.DrawRectangle(cast(i32)g.enemy.pos.x, cast(i32)g.enemy.pos.y, 50, 50, rl.RED)
 		rl.DrawRectangle(cast(i32)g.player.pos.x, cast(i32)g.player.pos.y, 25, 25, rl.GREEN)
 
