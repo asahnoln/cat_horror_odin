@@ -20,7 +20,7 @@ update_player :: proc(using p: ^Player, delta: time.Duration = 0) {
 }
 
 player_jump :: proc(using p: ^Player) {
-	if current_command == .Jump {
+	if current_command == .Jump && jump_time_left <= 0 {
 		pos.y -= jump_height
 		jump_time_left = jump_time
 	}

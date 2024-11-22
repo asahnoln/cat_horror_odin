@@ -19,6 +19,7 @@ enemy_follows_player_only_when_notices :: proc(t: ^testing.T) {
 
 		// When farther then notice range - enemy stays
 		{game.Pos{24, 0}, game.Pos{50, 0}},
+		{game.Pos{76, 0}, game.Pos{50, 0}},
 	}
 
 	for test in tt {

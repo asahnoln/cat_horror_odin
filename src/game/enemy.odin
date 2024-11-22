@@ -15,7 +15,7 @@ update_enemy :: proc(using e: ^Enemy, p: Player, delta: time.Duration = 0) {
 
 // If who should follow whom based on minimum notice distance
 sees :: proc(using who: Entity, whom: Entity, min_notice_distance: int) -> bool {
-	return pos.x - whom.pos.x <= min_notice_distance
+	return abs(pos.x - whom.pos.x) <= min_notice_distance
 }
 
 // Who follows Whom

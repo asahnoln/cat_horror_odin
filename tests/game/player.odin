@@ -54,3 +54,26 @@ player_can_jump :: proc(t: ^testing.T) {
 	game.update(g, 2 * time.Second)
 	testing.expect_value(t, g.player.pos.y, 100)
 }
+
+@(test)
+player_cannot_jump_while_jump :: proc(t: ^testing.T) {
+	g := &game.Game{player = {jump_height = 20, jump_time = 4 * time.Second}}
+	g.player.pos.y = 50
+
+	game.cmd(g, game.Command.Jump)
+	game.update(g, 1 * time.Second)
+
+	game.cmd(g, game.Command.Jump)
+	game.update(g, 1 * time.Second)
+	testing.expect_value(t, g.player.pos.y, 30)
+
+	game.update(g, 10 * time.Second)
+
+	// Second jump to mitigate delta
+	game.cmd(g, game.Command.Jump)
+	game.update(g, 1 * time.Second)
+
+	game.cmd(g, game.Command.Jump)
+	game.update(g, 1 * time.Second)
+	testing.expect_value(t, g.player.pos.y, 30)
+}
