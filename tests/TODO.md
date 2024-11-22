@@ -9,11 +9,13 @@
 - [x] Use frame delta time with the speed
 - [x] Player refactor jump?
 - [x] Player reach a location and then win?
-- [ ] Player reaches several locations in order to win
-- [ ] Stop jumping if already jumped
+- [x] Stop jumping if already jumped
+- [x] Assign speed instead of using default one
 - [ ] Enemy catch player using their sizes (entities should have sizes)
+- [ ] Zone is registered by size
+- [ ] Player reaches several locations in order to win
 - [ ] Fully animate jump
 - [ ] Level has objects to jump on and off
 - [ ] Enemy jump as well?
-- [x] Assign speed instead of using default one
 - [ ] somehow force stating speed to entity?
+- [ ] Hide in special locations (entities)

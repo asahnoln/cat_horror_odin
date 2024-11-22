@@ -12,11 +12,15 @@ game_has_default_state :: proc(t: ^testing.T) {
 
 @(test)
 game_ends_when_enemy_catches_the_player :: proc(t: ^testing.T) {
-	g := &game.Game{player = {pos = {0, 0}}, enemy = {pos = {1, 0}}, win_zone = {pos = {9999, 0}}}
+	g := &game.Game {
+		player = {pos = {0, 0}, size = {10, 10}},
+		enemy = {pos = {50, 0, size = {20, 20}}},
+		win_zone = {pos = {9999, 0}},
+	}
 	game.update(g)
 	testing.expect_value(t, g.state, game.State.InProgress)
 
-	g.enemy.pos.x = 0
+	g.enemy.pos.x = 9
 	game.update(g)
 	testing.expect_value(t, g.state, game.State.Lost)
 }
