@@ -1,6 +1,7 @@
 package test_game
 
 import "core:testing"
+import "core:time"
 import "src:game"
 import rl "vendor:raylib"
 

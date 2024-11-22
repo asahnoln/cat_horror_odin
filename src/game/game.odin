@@ -15,8 +15,7 @@ Game :: struct {
 		using _:         Entity,
 		jump_height:     int,
 		jump_time:       time.Duration,
-		jump_start_time: time.Duration,
-		jumping:         bool,
+		jump_time_left:  time.Duration,
 		current_command: Command,
 	},
 	enemy:        struct {
@@ -46,11 +45,6 @@ dirs := #partial [Command]int {
 
 // Send command to the Game
 cmd :: proc(g: ^Game, c: Command) {
-	// FIX: Move jump to play proc
-	if c == .Jump {
-		player_jump(g)
-	}
-
 	g.player.current_command = c
 }
 
@@ -59,34 +53,35 @@ play :: proc(g: ^Game, delta: time.Duration = 0) {
 	g.time_elapsed += delta
 
 	player_move(g, delta)
-
-	player_jump_reset(g)
+	player_jump(g)
+	player_jump_reset(g, delta)
+	g.player.current_command = .None
 
 	if should_follow(&g.enemy, &g.player, g.enemy.min_notice_distance) {
-		follow(&g.enemy, &g.player)
+		follow(&g.enemy, &g.player, delta)
 	}
 
 	g.lost = check_if_lost(g)
 }
 
 player_move :: proc(g: ^Game, delta: time.Duration) {
-	// FIX: Make general move proc for enemy to use as well
-	g.player.pos.x +=
-		dirs[g.player.current_command] *
-		int(math.ceil(cast(f64)g.player.speed * time.duration_seconds(delta)))
-	g.player.current_command = .None
+	move(&g.player, dirs[g.player.current_command], delta)
 }
 
 player_jump :: proc(g: ^Game) {
-	g.player.pos.y -= g.player.jump_height
-	g.player.jump_start_time = g.time_elapsed
-	g.player.jumping = true
+	if g.player.current_command == .Jump {
+		g.player.pos.y -= g.player.jump_height
+		g.player.jump_time_left = g.player.jump_time
+	}
 }
 
-player_jump_reset :: proc(g: ^Game) {
-	if g.player.jumping && g.time_elapsed >= g.player.jump_start_time + g.player.jump_time {
-		g.player.pos.y += g.player.jump_height
-		g.player.jumping = false
+player_jump_reset :: proc(g: ^Game, delta: time.Duration) {
+	if g.player.jump_time_left > 0 {
+		g.player.jump_time_left -= delta
+
+		if g.player.jump_time_left <= 0 {
+			g.player.pos.y += g.player.jump_height
+		}
 	}
 }
 
@@ -96,12 +91,21 @@ should_follow :: proc(who, whom: ^Entity, min_notice_distance: int) -> bool {
 }
 
 // Who follows Whom
-follow :: proc(who, whom: ^Entity) {
+follow :: proc(who, whom: ^Entity, delta: time.Duration) {
 	if who.pos.x == whom.pos.x {
 		return
 	}
 
-	who.pos.x += whom.pos.x < who.pos.x ? -1 : 1
+	dir := whom.pos.x < who.pos.x ? -1 : 1
+	move(who, dir, delta)
+}
+
+move :: proc(e: ^Entity, dir: int, delta: time.Duration) {
+	e.pos.x += next_frame_pos_x(dir, e.speed, delta)
+}
+
+next_frame_pos_x :: proc(dir: int, speed: int, delta: time.Duration) -> int {
+	return dir * int(math.ceil(cast(f64)speed * time.duration_seconds(delta)))
 }
 
 // Check lose conditions

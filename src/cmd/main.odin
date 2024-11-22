@@ -15,9 +15,9 @@ main :: proc() {
 			pos = game.Pos{200, 250},
 			speed = 100,
 			jump_height = 60,
-			jump_time = 2 * time.Second,
+			jump_time = 1 * time.Second,
 		},
-		enemy = {pos = game.Pos{700, 250}, min_notice_distance = 100},
+		enemy = {pos = game.Pos{700, 250}, min_notice_distance = 100, speed = 50},
 	}
 
 	rl.SetTargetFPS(60)
