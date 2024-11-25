@@ -18,6 +18,7 @@ Game :: struct {
 	state:    State,
 }
 
+// Game state
 State :: enum {
 	InProgress,
 	Lost,
@@ -27,6 +28,7 @@ State :: enum {
 // 2d coordinates
 Pos :: distinct [2]int
 
+// 2d size
 Size :: distinct [2]int
 
 // Game commands
@@ -70,7 +72,7 @@ update_state :: proc(using g: ^Game) {
 	switch {
 	case collides(g.enemy, g.player):
 		state = .Lost
-	case player.pos == win_zone.pos:
+	case inside(g.player, g.win_zone):
 		state = .Won
 	}
 }
@@ -84,5 +86,20 @@ collides :: proc(who, whom: Entity) -> bool {
 		(who.pos.y <= whom.pos.y + whom.size.y && who.pos.y >= whom.pos.y ||
 				who.pos.y + who.size.y >= whom.pos.y &&
 					who.pos.y + who.size.y <= whom.pos.y + whom.size.y) \
+	)
+}
+
+// Who is fully inside Whom or fully covers Whom
+inside :: proc(who, whom: Entity) -> bool {
+	return inside_final(who, whom) || inside_final(whom, who)
+}
+
+@(private)
+inside_final :: proc(who, whom: Entity) -> bool {
+	return(
+		(who.pos.x >= whom.pos.x &&
+			who.pos.x + who.size.x <= whom.pos.x + whom.size.x &&
+			who.pos.y >= whom.pos.y &&
+			who.pos.y + who.size.y <= whom.pos.y + whom.size.y) \
 	)
 }

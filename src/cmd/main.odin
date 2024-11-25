@@ -19,7 +19,7 @@ main :: proc() {
 			size = {25, 25},
 		},
 		enemy = {pos = {500, 250}, min_notice_distance = 100, speed = 50, size = {50, 50}},
-		win_zone = {pos = {700, 250}},
+		win_zone = {pos = {700, 250}, size = {100, 100}},
 	}
 
 	rl.SetTargetFPS(60)
@@ -29,7 +29,13 @@ main :: proc() {
 		defer rl.EndDrawing()
 
 		rl.ClearBackground(rl.WHITE)
-		rl.DrawRectangle(cast(i32)g.win_zone.pos.x, cast(i32)g.win_zone.pos.y, 100, 100, rl.YELLOW)
+		rl.DrawRectangle(
+			cast(i32)g.win_zone.pos.x,
+			cast(i32)g.win_zone.pos.y,
+			cast(i32)g.win_zone.size.x,
+			cast(i32)g.win_zone.size.y,
+			rl.YELLOW,
+		)
 		rl.DrawRectangle(
 			cast(i32)g.enemy.pos.x,
 			cast(i32)g.enemy.pos.y,

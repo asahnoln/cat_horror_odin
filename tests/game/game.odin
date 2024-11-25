@@ -51,8 +51,41 @@ game_ends_when_enemy_collides_with_the_player :: proc(t: ^testing.T) {
 
 @(test)
 game_is_won_when_player_reaches_final_location :: proc(t: ^testing.T) {
-	g := &game.Game{player = {pos = {50, 50}}, win_zone = {pos = {50, 50}}}
+	tt := [?]struct {
+		g: ^game.Game,
+		s: game.State,
+	} {
+		{
+			&game.Game {
+				player = {pos = {55, 55}, size = {10, 10}},
+				win_zone = {pos = {50, 50}, size = {20, 20}},
+			},
+			game.State.Won,
+		},
+		{
+			&game.Game {
+				player = {pos = {45, 45}, size = {10, 10}},
+				win_zone = {pos = {50, 50}, size = {20, 20}},
+			},
+			game.State.InProgress,
+		},
+	}
 
-	game.update(g)
-	testing.expect_value(t, g.state, game.State.Won)
+	for test in tt {
+		using test
+		game.update(g)
+		testing.expect_value(t, g.state, s)
+	}
+}
+
+@(test)
+bigger_entity_inside_smaller_enityt :: proc(t: ^testing.T) {
+	b := game.Entity {
+		size = {10, 10},
+	}
+	s := game.Entity {
+		size = {5, 5},
+	}
+
+	testing.expect(t, game.inside(b, s))
 }
