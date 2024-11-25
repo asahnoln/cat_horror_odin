@@ -7,6 +7,7 @@ import "core:time"
 Entity :: struct {
 	pos:   Pos,
 	speed: int,
+	size:  Size,
 }
 
 // Main state object for the game holding all info on current game
@@ -25,6 +26,8 @@ State :: enum {
 
 // 2d coordinates
 Pos :: distinct [2]int
+
+Size :: distinct [2]int
 
 // Game commands
 Command :: enum {
@@ -65,9 +68,21 @@ next_frame_pos_x :: proc(dir: int, speed: int, delta: time.Duration) -> int {
 // Check win/lose conditions
 update_state :: proc(using g: ^Game) {
 	switch {
-	case g.enemy.pos == g.player.pos:
+	case collides(g.enemy, g.player):
 		state = .Lost
 	case player.pos == win_zone.pos:
 		state = .Won
 	}
+}
+
+// Who collides with Whom
+collides :: proc(who, whom: Entity) -> bool {
+	return(
+		(who.pos.x <= whom.pos.x + whom.size.x && who.pos.x >= whom.pos.x ||
+			who.pos.x + who.size.x >= whom.pos.x &&
+				who.pos.x + who.size.x <= whom.pos.x + whom.size.x) &&
+		(who.pos.y <= whom.pos.y + whom.size.y && who.pos.y >= whom.pos.y ||
+				who.pos.y + who.size.y >= whom.pos.y &&
+					who.pos.y + who.size.y <= whom.pos.y + whom.size.y) \
+	)
 }

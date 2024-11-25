@@ -11,8 +11,14 @@ main :: proc() {
 	defer rl.CloseWindow()
 
 	g := &game.Game {
-		player = {pos = {200, 250}, speed = 100, jump_height = 60, jump_time = 1 * time.Second},
-		enemy = {pos = {500, 250}, min_notice_distance = 100, speed = 50},
+		player = {
+			pos = {200, 250},
+			speed = 100,
+			jump_height = 60,
+			jump_time = 2 * time.Second,
+			size = {25, 25},
+		},
+		enemy = {pos = {500, 250}, min_notice_distance = 100, speed = 50, size = {50, 50}},
 		win_zone = {pos = {700, 250}},
 	}
 
@@ -24,8 +30,20 @@ main :: proc() {
 
 		rl.ClearBackground(rl.WHITE)
 		rl.DrawRectangle(cast(i32)g.win_zone.pos.x, cast(i32)g.win_zone.pos.y, 100, 100, rl.YELLOW)
-		rl.DrawRectangle(cast(i32)g.enemy.pos.x, cast(i32)g.enemy.pos.y, 50, 50, rl.RED)
-		rl.DrawRectangle(cast(i32)g.player.pos.x, cast(i32)g.player.pos.y, 25, 25, rl.GREEN)
+		rl.DrawRectangle(
+			cast(i32)g.enemy.pos.x,
+			cast(i32)g.enemy.pos.y,
+			cast(i32)g.enemy.size.x,
+			cast(i32)g.enemy.size.y,
+			rl.RED,
+		)
+		rl.DrawRectangle(
+			cast(i32)g.player.pos.x,
+			cast(i32)g.player.pos.y,
+			cast(i32)g.player.size.x,
+			cast(i32)g.player.size.y,
+			rl.GREEN,
+		)
 
 		switch {
 		case rl.IsKeyDown(rl.KeyboardKey.LEFT):

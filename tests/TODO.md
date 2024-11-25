@@ -12,11 +12,12 @@
 - [x] Stop jumping if already jumped
 - [x] Assign speed instead of using default one
 - [ ] Enemy catch player using their sizes (entities should have sizes)
+- [ ] Sizes are counted DOWN the screen
 - [ ] Zone is registered by size
 - [ ] Player reaches several locations in order to win
 - [ ] Fully animate jump
 - [ ] Level has objects to jump on and off
 - [ ] Enemy jump as well?
-- [ ] somehow force stating speed to entity?
+- [ ] Make functions to create objects with required field
 - [ ] Hide in special locations (entities)
 - [ ] After basic mechanices (go to locations to win) try sprites, animation, etc
