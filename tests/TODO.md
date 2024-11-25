@@ -12,9 +12,9 @@
 - [x] Stop jumping if already jumped
 - [x] Assign speed instead of using default one
 - [x] Enemy catch player using their sizes (entities should have sizes)
-- [ ] Zone is registered by size
-- [ ] Player reaches several locations in order to win
+- [x] Zone is registered by size
 - [ ] Fully animate jump
+- [ ] Player reaches several locations in order to win
 - [ ] Level has objects to jump on and off
 - [ ] Enemy jump as well?
 - [ ] Make functions to create objects with required field

@@ -82,3 +82,7 @@ Cat owners are enemies who wants to cuddle the cat.
 ### Items
 
 - [ ] Cucumber which scares the cat
+
+### Mechanics
+
+- [ ] Jump strength changes with holding space

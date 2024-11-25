@@ -3,6 +3,9 @@ package game
 import "core:math"
 import "core:time"
 
+// FIX: Remove global
+gravity_acceleration := 1
+
 // Any entity having coordinates
 Entity :: struct {
 	pos:   Pos,
@@ -12,10 +15,11 @@ Entity :: struct {
 
 // Main state object for the game holding all info on current game
 Game :: struct {
-	player:   Player,
-	enemy:    Enemy,
-	win_zone: Entity,
-	state:    State,
+	player:               Player,
+	enemy:                Enemy,
+	win_zone:             Entity,
+	state:                State,
+	gravity_acceleration: int,
 }
 
 // Game state
@@ -59,11 +63,15 @@ update :: proc(using g: ^Game, delta: time.Duration = 0) {
 
 // Moves entity in direction with its speed
 move :: proc(e: ^Entity, dir: int, delta: time.Duration) {
-	e.pos.x += next_frame_pos_x(dir, e.speed, delta)
+	e.pos.x += next_frame_pos(dir, e.speed, delta)
+}
+
+moveY :: proc(e: ^Entity, dir: int, delta: time.Duration) {
+	e.pos.y += next_frame_pos(dir, e.speed, delta)
 }
 
 // Calculate next x coordinate in delta time
-next_frame_pos_x :: proc(dir: int, speed: int, delta: time.Duration) -> int {
+next_frame_pos :: proc(dir: int, speed: int, delta: time.Duration) -> int {
 	return dir * int(math.ceil(cast(f64)speed * time.duration_seconds(delta)))
 }
 
