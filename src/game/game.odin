@@ -8,9 +8,10 @@ gravity_acceleration := 1
 
 // Any entity having coordinates
 Entity :: struct {
-	pos:   Pos,
-	speed: int,
-	size:  Size,
+	pos:      Pos,
+	speed:    int,
+	size:     Size,
+	blocking: bool,
 }
 
 // Main state object for the game holding all info on current game
@@ -18,6 +19,7 @@ Game :: struct {
 	player:               Player,
 	enemy:                Enemy,
 	win_zone:             Entity,
+	objects:              []Entity,
 	state:                State,
 	gravity_acceleration: int,
 }
@@ -58,6 +60,17 @@ cmd :: proc(g: ^Game, c: Command) {
 update :: proc(using g: ^Game, delta: time.Duration = 0) {
 	update_player(&player, delta)
 	update_enemy(&enemy, player, delta)
+
+	for o in objects {
+		if !o.blocking {
+			continue
+		}
+
+		if collides(player, o) {
+			player.pos.y = o.pos.y - player.size.y
+		}
+	}
+
 	update_state(g)
 }
 

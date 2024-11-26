@@ -63,34 +63,20 @@ player_cannot_jump_while_jump :: proc(t: ^testing.T) {
 @(test)
 player_can_jump_with_gravity :: proc(t: ^testing.T) {
 	game.gravity_acceleration = 5
-	g := &game.Game{gravity_acceleration = 5, player = {pos = {0, 1000}, jump_speed = 20}}
+	g := &game.Game {
+		player = {pos = {0, 1000}, size = {10, 10}, jump_speed = 20, gravity = true},
+		objects = {{pos = {-100, 1010}, size = {200, 200}, blocking = true}},
+	}
 	g.player.pos.y = 1000
 
 	game.cmd(g, game.Command.Jump)
 	game.update(g, 0)
 	testing.expect_value(t, g.player.pos.y, 1000)
 
-	game.update(g, 1 * time.Second)
-	testing.expect_value(t, g.player.pos.y, 980)
+	ys := [?]int{980, 965, 955, 950, 950, 955, 965, 980, 1000, 1000}
 
-	game.update(g, 1 * time.Second)
-	testing.expect_value(t, g.player.pos.y, 965)
-
-	game.update(g, 1 * time.Second)
-	testing.expect_value(t, g.player.pos.y, 955)
-
-	game.update(g, 1 * time.Second)
-	testing.expect_value(t, g.player.pos.y, 950)
-
-	game.update(g, 1 * time.Second)
-	testing.expect_value(t, g.player.pos.y, 955)
-	//
-	// game.update(g, 1 * time.Second)
-	// testing.expect_value(t, g.player.pos.y, 965)
-	//
-	// game.update(g, 1 * time.Second)
-	// testing.expect_value(t, g.player.pos.y, 980)
-	//
-	// game.update(g, 0)
-	// testing.expect_value(t, g.player.pos.y, 1000)
+	for y in ys {
+		game.update(g, 1 * time.Second)
+		testing.expect_value(t, g.player.pos.y, y)
+	}
 }

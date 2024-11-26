@@ -9,11 +9,13 @@
 - [x] Use frame delta time with the speed
 - [x] Player refactor jump?
 - [x] Player reach a location and then win?
-- [x] Stop jumping if already jumped
 - [x] Assign speed instead of using default one
 - [x] Enemy catch player using their sizes (entities should have sizes)
 - [x] Zone is registered by size
-- [ ] Fully animate jump
+- [x] Fully animate jump
+- [ ] Stop jumping if already jumped
+- [ ] Refactor (gravity system)
+- [ ] Check if player is actually junky because of the gravity
 - [ ] Player reaches several locations in order to win
 - [ ] Level has objects to jump on and off
 - [ ] Enemy jump as well?
