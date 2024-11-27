@@ -3,9 +3,6 @@ package game
 import "core:math"
 import "core:time"
 
-// FIX: Remove global
-gravity_acceleration := 1
-
 // Any entity having coordinates
 Entity :: struct {
 	pos:      Pos,
@@ -52,35 +49,41 @@ dirs := #partial [Command]int {
 }
 
 // Send command to the Game
-cmd :: proc(g: ^Game, c: Command) {
-	g.player.current_command = c
+cmd :: proc(using g: ^Game, c: Command) {
+	player.current_command = c
 }
 
 // Play one cycle of the Game
 update :: proc(using g: ^Game, delta: time.Duration = 0) {
+	update_player_gravity(g, delta)
 	update_player(&player, delta)
 	update_enemy(&enemy, player, delta)
+	update_player_collision_with_objects(&player, objects)
 
-	for o in objects {
+	update_state(g)
+}
+
+update_player_gravity :: proc(g: ^Game, delta: time.Duration) {
+	dir := g.player.jump_current_speed > 0 ? -1 : 1
+	g.player.pos.y += next_frame_pos(dir, abs(g.player.jump_current_speed), delta)
+	g.player.jump_current_speed += next_frame_pos(-1, g.gravity_acceleration, delta)
+}
+
+update_player_collision_with_objects :: proc(p: ^Player, objs: []Entity) {
+	for o in objs {
 		if !o.blocking {
 			continue
 		}
 
-		if collides(player, o) {
-			player.pos.y = o.pos.y - player.size.y
+		if collides(p, o) {
+			p.pos.y = o.pos.y - p.size.y
 		}
 	}
-
-	update_state(g)
 }
 
 // Moves entity in direction with its speed
 move :: proc(e: ^Entity, dir: int, delta: time.Duration) {
 	e.pos.x += next_frame_pos(dir, e.speed, delta)
-}
-
-moveY :: proc(e: ^Entity, dir: int, delta: time.Duration) {
-	e.pos.y += next_frame_pos(dir, e.speed, delta)
 }
 
 // Calculate next x coordinate in delta time

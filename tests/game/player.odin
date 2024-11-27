@@ -13,9 +13,9 @@ player_moves_on_commands :: proc(t: ^testing.T) {
 		final_pos: game.Pos,
 		speed:     int,
 	} {
-		{game.Pos{0, 0}, game.Command.MoveLeft, game.Pos{-1, 0}, 2},
-		{game.Pos{100, 200}, game.Command.MoveRight, game.Pos{102, 200}, 4},
-		{game.Pos{50, 10}, game.Command.MoveLeft, game.Pos{49, 10}, 1},
+		{{0, 0}, game.Command.MoveLeft, {-1, 0}, 2},
+		{{100, 200}, game.Command.MoveRight, {102, 200}, 4},
+		{{50, 10}, game.Command.MoveLeft, {49, 10}, 1},
 	}
 
 	for test in tt {
@@ -31,10 +31,10 @@ player_stands_when_no_command_passed :: proc(t: ^testing.T) {
 	g := &game.Game{player = {speed = 1}}
 	game.cmd(g, game.Command.MoveLeft)
 	game.update(g, 1 * time.Second)
-	testing.expect_value(t, g.player.pos, game.Pos{-1, 0})
+	testing.expect_value(t, g.player.pos.x, -1)
 
 	game.update(g, 1 * time.Second)
-	testing.expect_value(t, g.player.pos, game.Pos{-1, 0})
+	testing.expect_value(t, g.player.pos.x, -1)
 }
 
 // @(test)
@@ -62,9 +62,9 @@ player_cannot_jump_while_jump :: proc(t: ^testing.T) {
 
 @(test)
 player_can_jump_with_gravity :: proc(t: ^testing.T) {
-	game.gravity_acceleration = 5
 	g := &game.Game {
-		player = {pos = {0, 1000}, size = {10, 10}, jump_speed = 20, gravity = true},
+		gravity_acceleration = 5,
+		player = {pos = {0, 1000}, size = {10, 10}, jump_speed = 20},
 		objects = {{pos = {-100, 1010}, size = {200, 200}, blocking = true}},
 	}
 	g.player.pos.y = 1000

@@ -11,7 +11,6 @@ Player :: struct {
 	jump_time_left:     time.Duration,
 	jump_speed:         int,
 	jump_current_speed: int,
-	gravity:            bool,
 	current_command:    Command,
 }
 
@@ -25,11 +24,5 @@ update_player :: proc(using p: ^Player, delta: time.Duration = 0) {
 player_jump :: proc(using p: ^Player, delta: time.Duration) {
 	if current_command == .Jump {
 		jump_current_speed = jump_speed
-	}
-
-	if gravity {
-		dir := jump_current_speed > 0 ? -1 : 1
-		p.pos.y += next_frame_pos(dir, abs(jump_current_speed), delta)
-		jump_current_speed += next_frame_pos(-1, gravity_acceleration, delta)
 	}
 }
