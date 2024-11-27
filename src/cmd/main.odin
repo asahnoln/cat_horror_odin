@@ -11,8 +11,8 @@ main :: proc() {
 	defer rl.CloseWindow()
 
 	g := &game.Game {
-		gravity_acceleration = 500,
-		player = {pos = {200, 250}, speed = 100, jump_speed = 400, size = {25, 25}},
+		gravity_acceleration = 25,
+		player = {pos = {200, 0}, speed = 100, jump_speed = 800, size = {25, 25}},
 		enemy = {pos = {500, 200}, min_notice_distance = 100, speed = 50, size = {50, 50}},
 		win_zone = {pos = {700, 150}, size = {100, 100}},
 		objects = {{pos = {0, 250}, size = {1000, 1000}, blocking = true}},

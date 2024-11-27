@@ -1,5 +1,6 @@
 package game
 
+import "core:log"
 import "core:math"
 import "core:math/linalg"
 import "core:math/linalg/glsl"
@@ -11,6 +12,7 @@ Entity :: struct {
 	speed:    f64,
 	size:     Vec2,
 	blocking: bool,
+	move:     Vec2,
 }
 
 // Main state object for the game holding all info on current game
@@ -58,19 +60,15 @@ update :: proc(using g: ^Game, delta: time.Duration = 0) {
 	update_player(&player, delta)
 	update_enemy(&enemy, player, delta)
 	update_player_collision_with_objects(&player, objects)
-
 	update_state(g)
+
+	player.pos = get_new_pos_with_delta(player.pos, player.move, delta)
 }
 
 // Thinking of future gravity for all objects
 update_gravity :: proc(g: ^Game, delta: time.Duration) {
 	// Update gravity for player only with his jump speed
-	g.player.pos = get_new_pos_with_delta(
-		g.player.pos,
-		Vec2{0, -1 * g.player.jump_current_speed},
-		delta,
-	)
-	g.player.jump_current_speed += -1 * g.gravity_acceleration * time.duration_seconds(delta)
+	g.player.move.y += g.gravity_acceleration
 }
 
 update_player_collision_with_objects :: proc(p: ^Player, objs: []Entity) {
@@ -79,8 +77,9 @@ update_player_collision_with_objects :: proc(p: ^Player, objs: []Entity) {
 			continue
 		}
 
-		if collides(p, o) {
-			p.pos.y = o.pos.y - p.size.y
+		if collides(p, o) && p.move.y > 0 {
+			p.move.y = 0
+			// p.pos.y = o.pos.y - p.size.y
 		}
 	}
 }

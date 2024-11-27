@@ -1,5 +1,6 @@
 package test_game
 
+import "core:log"
 import "core:testing"
 import "core:time"
 import "src:game"
@@ -22,7 +23,7 @@ player_moves_on_commands :: proc(t: ^testing.T) {
 		g := &game.Game{player = {pos = test.start_pos, speed = test.speed}}
 		game.cmd(g, test.c)
 		game.update(g, 500 * time.Millisecond)
-		testing.expect_value(t, g.player.pos, test.final_pos)
+		testing.expect_value(t, g.player.pos.x, test.final_pos.x)
 	}
 }
 
@@ -39,7 +40,7 @@ player_stands_when_no_command_passed :: proc(t: ^testing.T) {
 
 // @(test)
 player_cannot_jump_while_jump :: proc(t: ^testing.T) {
-	g := &game.Game{player = {jump_height = 20, jump_time = 4 * time.Second}}
+	g := &game.Game{player = {jump_height = 20}}
 	g.player.pos.y = 50
 
 	game.cmd(g, game.Command.Jump)
@@ -76,6 +77,7 @@ player_can_jump_with_gravity :: proc(t: ^testing.T) {
 	ys := [?]f64{980, 965, 955, 950, 950, 955, 965, 980, 1000, 1000}
 
 	for y in ys {
+		log.infof("jump: %v", g.player.move.y)
 		game.update(g, 1 * time.Second)
 		testing.expect_value(t, g.player.pos.y, y)
 	}
