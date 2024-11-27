@@ -4,7 +4,7 @@ import "core:time"
 
 Enemy :: struct {
 	using _:             Entity,
-	min_notice_distance: int,
+	min_notice_distance: f64,
 }
 
 update_enemy :: proc(using e: ^Enemy, p: Player, delta: time.Duration = 0) {
@@ -14,7 +14,7 @@ update_enemy :: proc(using e: ^Enemy, p: Player, delta: time.Duration = 0) {
 }
 
 // If who should follow whom based on minimum notice distance
-sees :: proc(using who: Entity, whom: Entity, min_notice_distance: int) -> bool {
+sees :: proc(using who: Entity, whom: Entity, min_notice_distance: f64) -> bool {
 	return abs(pos.x - whom.pos.x) <= min_notice_distance
 }
 
@@ -24,6 +24,6 @@ follow :: proc(using who: ^Entity, whom: Entity, delta: time.Duration) {
 		return
 	}
 
-	dir := whom.pos.x < pos.x ? -1 : 1
-	move(who, dir, delta)
+	dir: f64 = whom.pos.x < pos.x ? -1 : 1
+	move_entity(who, {dir, 0}, delta)
 }

@@ -1,13 +1,15 @@
 package game
 
 import "core:math"
+import "core:math/linalg"
+import "core:math/linalg/glsl"
 import "core:time"
 
 // Any entity having coordinates
 Entity :: struct {
-	pos:      Pos,
-	speed:    int,
-	size:     Size,
+	pos:      Vec2,
+	speed:    f64,
+	size:     Vec2,
 	blocking: bool,
 }
 
@@ -18,7 +20,7 @@ Game :: struct {
 	win_zone:             Entity,
 	objects:              []Entity,
 	state:                State,
-	gravity_acceleration: int,
+	gravity_acceleration: f64,
 }
 
 // Game state
@@ -29,10 +31,7 @@ State :: enum {
 }
 
 // 2d coordinates
-Pos :: distinct [2]int
-
-// 2d size
-Size :: distinct [2]int
+Vec2 :: linalg.Vector2f64
 
 // Game commands
 Command :: enum {
@@ -43,7 +42,7 @@ Command :: enum {
 }
 
 // Commands mapped to vector directions
-dirs := #partial [Command]int {
+dirs := #partial [Command]f64 {
 	.MoveLeft  = -1,
 	.MoveRight = 1,
 }
@@ -55,7 +54,7 @@ cmd :: proc(using g: ^Game, c: Command) {
 
 // Play one cycle of the Game
 update :: proc(using g: ^Game, delta: time.Duration = 0) {
-	update_player_gravity(g, delta)
+	update_gravity(g, delta)
 	update_player(&player, delta)
 	update_enemy(&enemy, player, delta)
 	update_player_collision_with_objects(&player, objects)
@@ -63,10 +62,15 @@ update :: proc(using g: ^Game, delta: time.Duration = 0) {
 	update_state(g)
 }
 
-update_player_gravity :: proc(g: ^Game, delta: time.Duration) {
-	dir := g.player.jump_current_speed > 0 ? -1 : 1
-	g.player.pos.y += next_frame_pos(dir, abs(g.player.jump_current_speed), delta)
-	g.player.jump_current_speed += next_frame_pos(-1, g.gravity_acceleration, delta)
+// Thinking of future gravity for all objects
+update_gravity :: proc(g: ^Game, delta: time.Duration) {
+	// Update gravity for player only with his jump speed
+	g.player.pos = get_new_pos_with_delta(
+		g.player.pos,
+		Vec2{0, -1 * g.player.jump_current_speed},
+		delta,
+	)
+	g.player.jump_current_speed += -1 * g.gravity_acceleration * time.duration_seconds(delta)
 }
 
 update_player_collision_with_objects :: proc(p: ^Player, objs: []Entity) {
@@ -82,13 +86,12 @@ update_player_collision_with_objects :: proc(p: ^Player, objs: []Entity) {
 }
 
 // Moves entity in direction with its speed
-move :: proc(e: ^Entity, dir: int, delta: time.Duration) {
-	e.pos.x += next_frame_pos(dir, e.speed, delta)
+move_entity :: proc(e: ^Entity, dir: Vec2, delta: time.Duration) {
+	e.pos = get_new_pos_with_delta(e.pos, dir * e.speed, delta)
 }
 
-// Calculate next x coordinate in delta time
-next_frame_pos :: proc(dir: int, speed: int, delta: time.Duration) -> int {
-	return dir * int(math.ceil(cast(f64)speed * time.duration_seconds(delta)))
+get_new_pos_with_delta :: proc(pos, dir: Vec2, delta: time.Duration) -> Vec2 {
+	return pos + dir * time.duration_seconds(delta)
 }
 
 // Check win/lose conditions

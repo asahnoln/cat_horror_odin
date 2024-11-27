@@ -9,13 +9,13 @@ Player :: struct {
 	jump_height:        int,
 	jump_time:          time.Duration,
 	jump_time_left:     time.Duration,
-	jump_speed:         int,
-	jump_current_speed: int,
+	jump_speed:         f64,
+	jump_current_speed: f64,
 	current_command:    Command,
 }
 
 update_player :: proc(using p: ^Player, delta: time.Duration = 0) {
-	move(p, dirs[current_command], delta)
+	move_entity(p, {dirs[current_command], 0}, delta)
 	player_jump(p, delta)
 
 	current_command = .None

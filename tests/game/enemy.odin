@@ -7,10 +7,10 @@ import rl "vendor:raylib"
 
 @(test)
 enemy_follows_player_only_when_notices :: proc(t: ^testing.T) {
-	enemy_start_position := game.Pos{50, 0}
+	enemy_start_position := game.Vec2{50, 0}
 	tt := [?]struct {
-		player_pos:      game.Pos,
-		enemy_final_pos: game.Pos,
+		player_pos:      game.Vec2,
+		enemy_final_pos: game.Vec2,
 	} {
 		// When noticed
 		{{25, 0}, {48, 0}},
