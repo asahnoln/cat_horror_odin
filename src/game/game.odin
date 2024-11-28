@@ -56,19 +56,28 @@ cmd :: proc(using g: ^Game, c: Command) {
 
 // Play one cycle of the Game
 update :: proc(using g: ^Game, delta: time.Duration = 0) {
-	update_gravity(g, delta)
-	update_player(&player, delta)
-	update_enemy(&enemy, player, delta)
-	update_player_collision_with_objects(&player, objects)
-	update_state(g)
+	update_player(&player)
+	update_enemy(&enemy, player)
 
-	player.pos = get_new_pos_with_delta(player.pos, player.move, delta)
+	update_gravity(g, delta)
+
+	move_entities(g, delta)
+
+	update_player_collision_with_objects(&player, objects)
+
+	update_state(g)
 }
 
 // Thinking of future gravity for all objects
 update_gravity :: proc(g: ^Game, delta: time.Duration) {
 	// Update gravity for player only with his jump speed
-	g.player.move.y += g.gravity_acceleration
+	// NOTE: Is that still ok to multiply by delta? It works with it, doesn't work without, but it doesn't look right
+	g.player.move.y += g.gravity_acceleration * time.duration_seconds(delta)
+}
+
+move_entities :: proc(using g: ^Game, delta: time.Duration) {
+	player.pos = move_with_delta(player.pos, player.move, delta)
+	enemy.pos = move_with_delta(enemy.pos, enemy.move, delta)
 }
 
 update_player_collision_with_objects :: proc(p: ^Player, objs: []Entity) {
@@ -79,17 +88,18 @@ update_player_collision_with_objects :: proc(p: ^Player, objs: []Entity) {
 
 		if collides(p, o) && p.move.y > 0 {
 			p.move.y = 0
-			// p.pos.y = o.pos.y - p.size.y
+			p.pos.y = o.pos.y - p.size.y
 		}
 	}
 }
 
 // Moves entity in direction with its speed
-move_entity :: proc(e: ^Entity, dir: Vec2, delta: time.Duration) {
-	e.pos = get_new_pos_with_delta(e.pos, dir * e.speed, delta)
+set_move_vector_in_dir_with_speed :: proc(e: ^Entity, dir: f64) {
+	e.move.x = dir * e.speed
 }
 
-get_new_pos_with_delta :: proc(pos, dir: Vec2, delta: time.Duration) -> Vec2 {
+// Sum dir vec to pos vec with the power of delta
+move_with_delta :: proc(pos, dir: Vec2, delta: time.Duration) -> Vec2 {
 	return pos + dir * time.duration_seconds(delta)
 }
 
@@ -120,7 +130,6 @@ inside :: proc(who, whom: Entity) -> bool {
 	return inside_final(who, whom) || inside_final(whom, who)
 }
 
-@(private)
 inside_final :: proc(who, whom: Entity) -> bool {
 	return(
 		(who.pos.x >= whom.pos.x &&

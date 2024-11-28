@@ -7,9 +7,11 @@ Enemy :: struct {
 	min_notice_distance: f64,
 }
 
-update_enemy :: proc(using e: ^Enemy, p: Player, delta: time.Duration = 0) {
+update_enemy :: proc(using e: ^Enemy, p: Player) {
+	e.move.x = 0
+
 	if sees(e, p, min_notice_distance) {
-		follow(e, p, delta)
+		follow(e, p)
 	}
 }
 
@@ -19,11 +21,11 @@ sees :: proc(using who: Entity, whom: Entity, min_notice_distance: f64) -> bool 
 }
 
 // Who follows Whom
-follow :: proc(using who: ^Entity, whom: Entity, delta: time.Duration) {
+follow :: proc(using who: ^Entity, whom: Entity) {
 	if pos.x == whom.pos.x {
 		return
 	}
 
 	dir: f64 = whom.pos.x < pos.x ? -1 : 1
-	move_entity(who, {dir, 0}, delta)
+	set_move_vector_in_dir_with_speed(who, dir)
 }

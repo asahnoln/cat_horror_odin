@@ -11,14 +11,14 @@ Player :: struct {
 	current_command: Command,
 }
 
-update_player :: proc(using p: ^Player, delta: time.Duration = 0) {
-	p.move.x = dirs[current_command] * p.speed
-	player_jump(p, delta)
+update_player :: proc(using p: ^Player) {
+	set_move_vector_in_dir_with_speed(p, dirs[current_command])
+	player_jump(p)
 
 	current_command = .None
 }
 
-player_jump :: proc(using p: ^Player, delta: time.Duration) {
+player_jump :: proc(using p: ^Player) {
 	if current_command == .Jump {
 		p.move.y = -jump_speed
 	}

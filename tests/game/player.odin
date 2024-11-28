@@ -65,10 +65,9 @@ player_cannot_jump_while_jump :: proc(t: ^testing.T) {
 player_can_jump_with_gravity :: proc(t: ^testing.T) {
 	g := &game.Game {
 		gravity_acceleration = 5,
-		player = {pos = {0, 1000}, size = {10, 10}, jump_speed = 20},
+		player = {pos = {0, 1000}, size = {10, 10}, jump_speed = 25},
 		objects = {{pos = {-100, 1010}, size = {200, 200}, blocking = true}},
 	}
-	g.player.pos.y = 1000
 
 	game.cmd(g, game.Command.Jump)
 	game.update(g, 0)
@@ -77,8 +76,19 @@ player_can_jump_with_gravity :: proc(t: ^testing.T) {
 	ys := [?]f64{980, 965, 955, 950, 950, 955, 965, 980, 1000, 1000}
 
 	for y in ys {
-		log.infof("jump: %v", g.player.move.y)
 		game.update(g, 1 * time.Second)
 		testing.expect_value(t, g.player.pos.y, y)
 	}
+}
+
+@(test)
+player_dont_go_under_blockin_object :: proc(t: ^testing.T) {
+	g := &game.Game {
+		gravity_acceleration = 10,
+		player = {pos = {0, 190}, size = {10, 10}, jump_speed = 20},
+		objects = {{pos = {-100, 210}, size = {200, 200}, blocking = true}},
+	}
+
+	game.update(g, 2 * time.Second)
+	testing.expect_value(t, g.player.pos.y, 200)
 }
