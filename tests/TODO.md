@@ -13,9 +13,9 @@
 - [x] Enemy catch player using their sizes (entities should have sizes)
 - [x] Zone is registered by size
 - [x] Fully animate jump
+- [ ] Enemy AI - wandering, following, searching
 - [ ] Stop jumping if already jumped
-- [ ] Refactor (gravity system)
-- [ ] Check if player is actually junky because of the gravity
+- [x] Refactor (gravity system)
 - [ ] Player reaches several locations in order to win
 - [ ] Level has objects to jump on and off
 - [ ] Enemy jump as well?

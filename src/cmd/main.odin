@@ -13,18 +13,27 @@ main :: proc() {
 	g := &game.Game {
 		gravity_acceleration = 700,
 		player = {pos = {200, 0}, speed = 200, jump_speed = 400, size = {25, 25}},
-		enemy = {pos = {500, 200}, min_notice_distance = 100, speed = 100, size = {50, 50}},
+		enemy = {pos = {500, 200}, min_notice_distance = 200, speed = 130, size = {50, 50}},
 		win_zone = {pos = {700, 150}, size = {100, 100}},
 		objects = {{pos = {0, 250}, size = {1000, 1000}, blocking = true}},
 	}
 
+	c := rl.Camera2D{}
+	c.offset = {800 / 2, 450 / 2}
+	c.zoom = 1
+
 	rl.SetTargetFPS(60)
 
 	for !rl.WindowShouldClose() && g.state == game.State.InProgress {
+		c.target = {f32(g.player.pos.x), f32(g.player.pos.y)}
+
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
 
 		rl.ClearBackground(rl.WHITE)
+
+		rl.BeginMode2D(c)
+
 		for o in g.objects {
 			rl.DrawRectangle(
 				cast(i32)o.pos.x,
@@ -55,6 +64,8 @@ main :: proc() {
 			cast(i32)g.player.size.y,
 			rl.GREEN,
 		)
+
+		rl.EndMode2D()
 
 		switch {
 		case rl.IsKeyDown(rl.KeyboardKey.LEFT):
