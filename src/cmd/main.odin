@@ -20,12 +20,14 @@ main :: proc() {
 
 	c := rl.Camera2D{}
 	c.offset = {800 / 2, 450 / 2}
+	c.target = {400, 250}
 	c.zoom = 1
 
+	// NOTE: Should not fix fps I guess
 	rl.SetTargetFPS(60)
 
 	for !rl.WindowShouldClose() && g.state == game.State.InProgress {
-		c.target = {f32(g.player.pos.x), f32(g.player.pos.y)}
+		c.target = g.player.pos + g.player.size / 2
 
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
@@ -78,6 +80,6 @@ main :: proc() {
 			game.cmd(g, game.Command.Jump)
 		}
 
-		game.update(g, utils.f2s(cast(f64)rl.GetFrameTime()))
+		game.update(g, utils.f2s(rl.GetFrameTime()))
 	}
 }

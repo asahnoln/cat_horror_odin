@@ -12,7 +12,7 @@ player_moves_on_commands :: proc(t: ^testing.T) {
 		start_pos: game.Vec2,
 		c:         game.Command,
 		final_pos: game.Vec2,
-		speed:     f64,
+		speed:     game.Unit,
 	} {
 		{{0, 0}, game.Command.MoveLeft, {-1, 0}, 2},
 		{{100, 200}, game.Command.MoveRight, {102, 200}, 4},
@@ -73,7 +73,7 @@ player_can_jump_with_gravity :: proc(t: ^testing.T) {
 	game.update(g, 0)
 	testing.expect_value(t, g.player.pos.y, 1000)
 
-	ys := [?]f64{980, 965, 955, 950, 950, 955, 965, 980, 1000, 1000}
+	ys := [?]game.Unit{980, 965, 955, 950, 950, 955, 965, 980, 1000, 1000}
 
 	for y in ys {
 		game.update(g, 1 * time.Second)

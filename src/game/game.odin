@@ -9,7 +9,7 @@ import "core:time"
 // Any entity having coordinates
 Entity :: struct {
 	pos:      Vec2,
-	speed:    f64,
+	speed:    Unit,
 	size:     Vec2,
 	blocking: bool,
 	move:     Vec2,
@@ -22,7 +22,7 @@ Game :: struct {
 	win_zone:             Entity,
 	objects:              []Entity,
 	state:                State,
-	gravity_acceleration: f64,
+	gravity_acceleration: Unit,
 }
 
 // Game state
@@ -32,8 +32,10 @@ State :: enum {
 	Won,
 }
 
+Unit :: f32
+
 // 2d coordinates
-Vec2 :: linalg.Vector2f64
+Vec2 :: [2]Unit
 
 // Game commands
 Command :: enum {
@@ -44,7 +46,7 @@ Command :: enum {
 }
 
 // Commands mapped to vector directions
-dirs := #partial [Command]f64 {
+dirs := #partial [Command]Unit {
 	.MoveLeft  = -1,
 	.MoveRight = 1,
 }
@@ -72,7 +74,7 @@ update :: proc(using g: ^Game, delta: time.Duration = 0) {
 update_gravity :: proc(g: ^Game, delta: time.Duration) {
 	// Update gravity for player only with his jump speed
 	// NOTE: Is that still ok to multiply by delta? It works with it, doesn't work without, but it doesn't look right
-	g.player.move.y += g.gravity_acceleration * time.duration_seconds(delta)
+	g.player.move.y += g.gravity_acceleration * cast(Unit)time.duration_seconds(delta)
 }
 
 move_entities :: proc(using g: ^Game, delta: time.Duration) {
@@ -94,13 +96,13 @@ update_player_collision_with_objects :: proc(p: ^Player, objs: []Entity) {
 }
 
 // Moves entity in direction with its speed
-set_move_vector_in_dir_with_speed :: proc(e: ^Entity, dir: f64) {
+set_move_vector_in_dir_with_speed :: proc(e: ^Entity, dir: Unit) {
 	e.move.x = dir * e.speed
 }
 
 // Sum dir vec to pos vec with the power of delta
 move_with_delta :: proc(pos, dir: Vec2, delta: time.Duration) -> Vec2 {
-	return pos + dir * time.duration_seconds(delta)
+	return pos + dir * cast(Unit)time.duration_seconds(delta)
 }
 
 // Check win/lose conditions

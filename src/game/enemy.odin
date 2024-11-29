@@ -17,7 +17,7 @@ update_enemy :: proc(using e: ^Enemy, p: Player) {
 
 // If who should follow whom based on minimum notice distance
 sees :: proc(using who: Entity, whom: Entity, min_notice_distance: f64) -> bool {
-	return abs(pos.x - whom.pos.x) <= min_notice_distance
+	return abs(pos.x - whom.pos.x) <= f32(min_notice_distance)
 }
 
 // Who follows Whom
@@ -26,6 +26,6 @@ follow :: proc(using who: ^Entity, whom: Entity) {
 		return
 	}
 
-	dir: f64 = whom.pos.x < pos.x ? -1 : 1
+	dir: Unit = whom.pos.x < pos.x ? -1 : 1
 	set_move_vector_in_dir_with_speed(who, dir)
 }

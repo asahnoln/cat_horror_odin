@@ -7,7 +7,7 @@ import "core:time"
 Player :: struct {
 	using _:         Entity,
 	jump_height:     int,
-	jump_speed:      f64,
+	jump_speed:      Unit,
 	current_command: Command,
 }
 
