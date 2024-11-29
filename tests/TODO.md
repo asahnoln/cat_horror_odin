@@ -14,6 +14,7 @@
 - [x] Zone is registered by size
 - [x] Fully animate jump
 - [ ] Enemy AI - wandering, following, searching
+- [ ] Enemy stop moving when at player's location
 - [ ] Stop jumping if already jumped
 - [x] Refactor (gravity system)
 - [ ] Player reaches several locations in order to win

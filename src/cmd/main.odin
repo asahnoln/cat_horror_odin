@@ -15,7 +15,12 @@ main :: proc() {
 		player = {pos = {200, 0}, speed = 200, jump_speed = 400, size = {25, 25}},
 		enemy = {pos = {500, 200}, min_notice_distance = 200, speed = 130, size = {50, 50}},
 		win_zone = {pos = {700, 150}, size = {100, 100}},
-		objects = {{pos = {0, 250}, size = {1000, 1000}, blocking = true}},
+		objects = {
+			{pos = {-500, 250}, size = {2000, 1000}, blocking = true},
+			{pos = {200, 150}, size = {30, 5}, blocking = true},
+			{pos = {400, 180}, size = {30, 5}, blocking = true},
+			{pos = {600, 170}, size = {30, 5}, blocking = true},
+		},
 	}
 
 	c := rl.Camera2D{}
@@ -26,8 +31,36 @@ main :: proc() {
 	// NOTE: Should not fix fps I guess
 	rl.SetTargetFPS(60)
 
+	objs := make([]rl.Rectangle, len(g.objects))
+	for o, i in g.objects {
+		objs[i] = rl.Rectangle {
+			x      = o.pos.x,
+			y      = o.pos.y,
+			width  = o.size.x,
+			height = o.size.y,
+		}
+	}
+
+	w := rl.Rectangle {
+		x      = g.win_zone.pos.x,
+		y      = g.win_zone.pos.y,
+		width  = g.win_zone.size.x,
+		height = g.win_zone.size.y,
+	}
+	e := rl.Rectangle {
+		x      = g.enemy.pos.x,
+		y      = g.enemy.pos.y,
+		width  = g.enemy.size.x,
+		height = g.enemy.size.y,
+	}
+	p := rl.Rectangle {
+		x      = g.player.pos.x,
+		y      = g.player.pos.y,
+		width  = g.player.size.x,
+		height = g.player.size.y,
+	}
 	for !rl.WindowShouldClose() && g.state == game.State.InProgress {
-		c.target = g.player.pos + g.player.size / 2
+		c.target = g.player.pos
 
 		rl.BeginDrawing()
 		defer rl.EndDrawing()
@@ -36,36 +69,13 @@ main :: proc() {
 
 		rl.BeginMode2D(c)
 
-		for o in g.objects {
-			rl.DrawRectangle(
-				cast(i32)o.pos.x,
-				cast(i32)o.pos.y,
-				cast(i32)o.size.x,
-				cast(i32)o.size.y,
-				rl.GRAY,
-			)
+		for o in objs {
+			rl.DrawRectangleRec(o, rl.GRAY)
 		}
-		rl.DrawRectangle(
-			cast(i32)g.win_zone.pos.x,
-			cast(i32)g.win_zone.pos.y,
-			cast(i32)g.win_zone.size.x,
-			cast(i32)g.win_zone.size.y,
-			rl.YELLOW,
-		)
-		rl.DrawRectangle(
-			cast(i32)g.enemy.pos.x,
-			cast(i32)g.enemy.pos.y,
-			cast(i32)g.enemy.size.x,
-			cast(i32)g.enemy.size.y,
-			rl.RED,
-		)
-		rl.DrawRectangle(
-			cast(i32)g.player.pos.x,
-			cast(i32)g.player.pos.y,
-			cast(i32)g.player.size.x,
-			cast(i32)g.player.size.y,
-			rl.GREEN,
-		)
+
+		drawRec(&w, g.win_zone.pos, rl.YELLOW)
+		drawRec(&e, g.enemy.pos, rl.RED)
+		drawRec(&p, g.player.pos, rl.GREEN)
 
 		rl.EndMode2D()
 
