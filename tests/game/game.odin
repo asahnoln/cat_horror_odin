@@ -12,7 +12,7 @@ game_has_default_state :: proc(t: ^testing.T) {
 
 @(test)
 game_ends_when_enemy_collides_with_the_player :: proc(t: ^testing.T) {
-	tt := []struct {
+	tests := []struct {
 		g: ^game.Game,
 		p: proc(g: ^game.Game),
 	} {
@@ -38,8 +38,8 @@ game_ends_when_enemy_collides_with_the_player :: proc(t: ^testing.T) {
 		},
 	}
 
-	for test in tt {
-		using test
+	for tt in tests {
+		using tt
 		game.update(g)
 		testing.expect_value(t, g.state, game.State.InProgress)
 
@@ -51,7 +51,7 @@ game_ends_when_enemy_collides_with_the_player :: proc(t: ^testing.T) {
 
 @(test)
 game_is_won_when_player_reaches_final_location :: proc(t: ^testing.T) {
-	tt := [?]struct {
+	tests := [?]struct {
 		g: ^game.Game,
 		s: game.State,
 	} {
@@ -71,8 +71,8 @@ game_is_won_when_player_reaches_final_location :: proc(t: ^testing.T) {
 		},
 	}
 
-	for test in tt {
-		using test
+	for tt in tests {
+		using tt
 		game.update(g)
 		testing.expect_value(t, g.state, s)
 	}

@@ -8,7 +8,7 @@ import rl "vendor:raylib"
 @(test)
 enemy_follows_player_only_when_notices :: proc(t: ^testing.T) {
 	enemy_start_position := game.Vec2{50, 0}
-	tt := [?]struct {
+	tests := [?]struct {
 		player_pos:      game.Vec2,
 		enemy_final_pos: game.Vec2,
 	} {
@@ -22,13 +22,13 @@ enemy_follows_player_only_when_notices :: proc(t: ^testing.T) {
 		{{76, 0}, {50, 0}},
 	}
 
-	for test in tt {
+	for tt in tests {
 		g := &game.Game {
-			player = {pos = test.player_pos},
+			player = {pos = tt.player_pos},
 			enemy = {pos = enemy_start_position, min_notice_distance = 25, speed = 4},
 		}
 		game.update(g, 500 * time.Millisecond)
-		testing.expect_value(t, g.enemy.pos.x, test.enemy_final_pos.x)
+		testing.expect_value(t, g.enemy.pos.x, tt.enemy_final_pos.x)
 	}
 }
 

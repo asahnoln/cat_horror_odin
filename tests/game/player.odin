@@ -8,7 +8,7 @@ import rl "vendor:raylib"
 
 @(test)
 player_moves_on_commands :: proc(t: ^testing.T) {
-	tt := [?]struct {
+	tests := [?]struct {
 		start_pos: game.Vec2,
 		c:         game.Command,
 		final_pos: game.Vec2,
@@ -19,11 +19,11 @@ player_moves_on_commands :: proc(t: ^testing.T) {
 		{{50, 10}, game.Command.MoveLeft, {49.5, 10}, 1},
 	}
 
-	for test in tt {
-		g := &game.Game{player = {pos = test.start_pos, speed = test.speed}}
-		game.cmd(g, test.c)
+	for tt in tests {
+		g := &game.Game{player = {pos = tt.start_pos, speed = tt.speed}}
+		game.cmd(g, tt.c)
 		game.update(g, 500 * time.Millisecond)
-		testing.expect_value(t, g.player.pos.x, test.final_pos.x)
+		testing.expect_value(t, g.player.pos.x, tt.final_pos.x)
 	}
 }
 
